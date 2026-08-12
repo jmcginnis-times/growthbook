@@ -68,7 +68,7 @@ export async function validateExperimentChange({
   experiment: ExperimentInterface;
   changes: Changeset;
 }): Promise<void> {
-  if (!customHooksActive(context)) return;
+  if (!customHooksActive(context) || experiment.type === "holdout") return;
 
   const merged = { ...experiment, ...changes };
   const willRun =
