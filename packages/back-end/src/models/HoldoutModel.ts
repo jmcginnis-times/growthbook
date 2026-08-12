@@ -1,13 +1,16 @@
 import { z } from "zod";
-import { getHoldoutStage, stringToBoolean } from "shared/util";
+import {
+  coverageToHoldoutSize,
+  getHoldoutStage,
+  holdoutSizeToCoverage,
+  stringToBoolean,
+} from "shared/util";
 import {
   ApiHoldoutInterface,
   apiCreateHoldoutBody,
   apiHoldoutStageReturn,
   apiUpdateHoldoutBody,
-  coverageToHoldoutSize,
   DEFAULT_HOLDOUT_SIZE,
-  holdoutSizeToCoverage,
   HOLDOUT_API_EXPERIMENT_UPDATE_FIELDS,
   HOLDOUT_API_TARGETING_UPDATE_FIELDS,
   HOLDOUT_API_UPDATE_FIELDS,
@@ -24,10 +27,10 @@ import {
 } from "back-end/src/api/specs/holdout.spec";
 import { defineCustomApiHandler } from "back-end/src/api/apiModelHandlers";
 import {
-  advanceHoldoutStage,
   applyHoldoutTargetingChanges,
   createHoldoutWithExperiment,
   normalizeHoldoutScheduleUpdates,
+  setHoldoutStage,
 } from "back-end/src/services/holdouts";
 import {
   resolveOwnerEmail,
@@ -94,7 +97,7 @@ const BaseClass = MakeModelClass({
             req.context.permissions.throwPermissionError();
           }
 
-          await advanceHoldoutStage(req.context, {
+          await setHoldoutStage(req.context, {
             holdout,
             experiment,
             stage: req.body.stage,
@@ -168,8 +171,6 @@ export function toApiHoldout(
     assignmentQueryId: experiment?.exposureQueryId ?? "",
     goalMetrics: experiment?.goalMetrics ?? [],
     secondaryMetrics: experiment?.secondaryMetrics ?? [],
-    guardrailMetrics: experiment?.guardrailMetrics ?? [],
-    activationMetric: experiment?.activationMetric || undefined,
     variations: (experiment?.variations ?? []).map((v) => ({
       variationId: v.id,
       key: v.key,
@@ -345,8 +346,6 @@ export class HoldoutModel extends BaseClass {
         hashAttribute: body.hashAttribute || "id",
         goalMetrics: body.goalMetrics,
         secondaryMetrics: body.secondaryMetrics,
-        guardrailMetrics: body.guardrailMetrics,
-        activationMetric: body.activationMetric,
         environmentSettings: body.environments
           ? Object.fromEntries(
               Object.entries(body.environments).map(([id, settings]) => [

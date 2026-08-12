@@ -214,8 +214,6 @@ export const apiHoldoutValidator = namedSchema(
     assignmentQueryId: z.string(),
     goalMetrics: z.array(z.string()),
     secondaryMetrics: z.array(z.string()),
-    guardrailMetrics: z.array(z.string()),
-    activationMetric: z.string().optional(),
     variations: z.array(apiHoldoutVariation),
 
     environments: z
@@ -298,8 +296,6 @@ export const apiCreateHoldoutBody = z.strictObject({
   assignmentQueryId: z.string().optional(),
   goalMetrics: z.array(z.string()).optional(),
   secondaryMetrics: z.array(z.string()).optional(),
-  guardrailMetrics: z.array(z.string()).optional(),
-  activationMetric: z.string().optional(),
 
   environments: z
     .record(z.string(), apiHoldoutEnvironment)
@@ -331,8 +327,6 @@ export const apiUpdateHoldoutBody = z.strictObject({
   assignmentQueryId: z.string().optional(),
   goalMetrics: z.array(z.string()).optional(),
   secondaryMetrics: z.array(z.string()).optional(),
-  guardrailMetrics: z.array(z.string()).optional(),
-  activationMetric: z.string().optional(),
   variations: z
     .array(
       z.object({
@@ -375,8 +369,6 @@ export const HOLDOUT_API_EXPERIMENT_UPDATE_FIELDS = [
   "archived",
   "goalMetrics",
   "secondaryMetrics",
-  "guardrailMetrics",
-  "activationMetric",
 ] as const satisfies readonly (keyof ApiUpdateHoldoutBody)[];
 
 /**
