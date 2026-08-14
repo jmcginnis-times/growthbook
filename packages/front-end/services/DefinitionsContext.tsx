@@ -159,6 +159,7 @@ export function useDefinitions() {
 }
 
 export const LOCALSTORAGE_PROJECT_KEY = "gb_current_project" as const;
+export const LOCALSTORAGE_DASHBOARD_KEY = "gb_selected_dashboard" as const;
 
 // Applies user's team(s) default project constraint once per browser session
 let teamConstraintApplied = false;
