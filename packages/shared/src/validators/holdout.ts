@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { MAX_HOLDOUT_SIZE, holdoutStage } from "shared/util";
+import { MAX_HOLDOUT_SIZE, holdoutStage } from "../util/holdouts";
 import { MAX_DESCRIPTION_LENGTH } from "../constants";
 import { apiBaseSchema } from "./base-model";
 import { featureEnvironment } from "./features";
